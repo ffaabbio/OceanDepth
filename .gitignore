@@ -1,0 +1,28 @@
+# Build directories
+cmake-build-*/
+build/
+out/
+
+# CLion / IntelliJ
+.idea/
+
+# Compiled object files
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Libraries
+*.a
+*.so
+*.dll
+*.dylib
+
+# Backup / temporary files
+*.log
+*.tmp
+*.swp
+*.DS_Store
