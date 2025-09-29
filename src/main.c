@@ -1,21 +1,67 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
 #include "../include/player.h"
 #include "../include/creature.h"
 #include "../include/fight.h"
 #include "../include/inventory.h"
 
 int main() {
-    Player player = {100, 100, 80, 100, 0, 10};
-    Creature creature = {1, "Shark", 90, 90, 15, 25, 5, 7, "none", 1};
-    Inventory inv = {{{"Oxygen Capsule", 2}, {"Medkit", 1}}, 2};
+
+    /*typedef struct {
+        int id;
+        char name[30];
+        int maxHealthPoints;
+        int currentHealthPoints;
+        int minAttack;
+        int maxAttack;
+        int defense;
+        int speed;
+        char specialEffect[20]; // "paralysis", "poison", "none"
+        int isAlive;
+    } Creature;*/
+
+    Player player;
+    player.inventory.itemCount = 0;
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        player.inventory.items[i].quantity = 0;
+        player.inventory.items[i].name[0] = '\0'; // chaîne vide
+    }
+
+    Creature * creature = malloc(sizeof(Creature));
+
+
+    //Initialisation des parametres par defaut du joueur
+    player.maxHealthPoints = 100;
+    player.healthPoints = player.maxHealthPoints;
+    player.maxOxygenLevel = 50;
+    player.oxygenLevel = player.maxOxygenLevel;
+    player.attack = 10;
+    player.fatigueLevel = 0;
+    player.pearls = 0;
+    player.inventory.itemCount = 2;
+    player.inventory.items[0].quantity = 1;
+    strcpy(player.inventory.items[0].name,"Couteau en plastique");
+    player.inventory.items[0].attackImp = 2;
+    player.inventory.items[1].quantity = 1;
+    strcpy(player.inventory.items[1].name,"Capsule d'oxygene");
+    player.inventory.items[1].attackImp = 0;
+
+    //initialisation par defaut du monstre
+    strcpy(creature->name, "Requin");
+    creature->maxHealthPoints = 80;
+    creature->currentHealthPoints = creature->maxHealthPoints;
+    creature->minAttack =  10;
+    creature->maxAttack = 20;
+    creature->isAlive = 1;
 
     printf("=== OceanDepths ===\n\n");
 
-    displayPlayer(&player);
-    displayCreature(&creature);
-    displayInventory(&inv);
+    startCombat(&player, creature);
 
-    startCombat(&player, &creature);
+    free(creature);
 
     return 0;
 }

@@ -5,11 +5,12 @@
 
 typedef struct {
     char name[30];
+    int attackImp;
     int quantity;
-} InventoryItem;
+} Item;
 
 typedef struct {
-    InventoryItem items[MAX_ITEMS];
+    Item items[MAX_ITEMS];
     int itemCount;
 } Inventory;
 

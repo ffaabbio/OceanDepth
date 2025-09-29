@@ -1,13 +1,17 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+#include"inventory.h"
 
 typedef struct {
+    char * name;
     int healthPoints;
     int maxHealthPoints;
     int oxygenLevel;
     int maxOxygenLevel;
-    int fatigueLevel; // 0 to 5
+    int attack;
+    int fatigueLevel; // entre 0 et 5
     int pearls;
+    Inventory inventory;
 } Player;
 
 void displayPlayer(const Player *p);

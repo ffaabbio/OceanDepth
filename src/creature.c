@@ -2,10 +2,9 @@
 #include "../include/creature.h"
 
 void displayCreature(const Creature *c) {
-    printf("Creature [%s] - HP: %d/%d | ATK: %d-%d | DEF: %d | Speed: %d | Alive: %s\n",
+    printf("[%s] - Vie: %d/%d | Attaque: %d-%d | En vie: %s\n\n",
            c->name,
            c->currentHealthPoints, c->maxHealthPoints,
            c->minAttack, c->maxAttack,
-           c->defense, c->speed,
-           c->isAlive ? "yes" : "no");
+           c->isAlive ? "Oui" : "Non");
 }

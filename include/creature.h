@@ -2,7 +2,6 @@
 #define CREATURE_H
 
 typedef struct {
-    int id;
     char name[30];
     int maxHealthPoints;
     int currentHealthPoints;
