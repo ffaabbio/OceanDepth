@@ -3,13 +3,13 @@
 #include <string.h>
 #include <time.h>
 
+#include "map.h"
 #include "../include/player.h"
 #include "../include/creature.h"
 #include "../include/fight.h"
 #include "../include/inventory.h"
 
 int main() {
-
     /*typedef struct {
         int id;
         char name[30];
@@ -25,6 +25,9 @@ int main() {
 
     Player player;
     player.inventory.itemCount = 0;
+    player.x = 0;
+    player.y = 0;
+    player.depth = 0;
     for (int i = 0; i < MAX_ITEMS; i++) {
         player.inventory.items[i].quantity = 0;
         player.inventory.items[i].name[0] = '\0'; // chaîne vide
@@ -39,7 +42,8 @@ int main() {
     player.maxOxygenLevel = 50;
     player.oxygenLevel = player.maxOxygenLevel;
     player.attack = 10;
-    player.fatigueLevel = 0;
+    player.fatigueLevel = 1;
+    player.maxFatigueLevel = 5;
     player.pearls = 0;
     player.inventory.itemCount = 2;
     player.inventory.items[0].quantity = 1;

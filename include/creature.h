@@ -1,6 +1,7 @@
 #ifndef CREATURE_H
 #define CREATURE_H
 
+//Loot ?
 typedef struct {
     char name[30];
     int maxHealthPoints;

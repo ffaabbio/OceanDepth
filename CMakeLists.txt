@@ -13,4 +13,6 @@ add_executable(OceanDepths
         src/creature.c
         src/fight.c
         src/inventory.c
+        include/Map.h
+        src/map.c
 )
