@@ -8,18 +8,27 @@
 #include <common.h>
 #include <inventory.h>
 
-typedef struct {
+typedef struct Plongeur {
     int pv_max, pv;
     int o2_max, o2;
     int fatigue;      // 0..5
-    int perles;
-    int atk_min, atk_max;
-    int defense;
+    int perles;       // monnaie
+    int base_atk_min, base_atk_max;
+    int base_defense;
     Inventaire inv;
 } Plongeur;
 
+// Init joueur
 void joueur_init(Plongeur* p);
+
+// Stats effectives (avec équipements)
+int  joueur_atk_min(const Plongeur* p);
+int  joueur_atk_max(const Plongeur* p);
+int  joueur_defense_totale(const Plongeur* p);
+int  joueur_o2_cout_action(const Plongeur* p, int profondeur);
+int  joueur_o2_cout_passif(const Plongeur* p, int profondeur);
+
+// Tirage de dégâts (avec harpon si équipé)
 int  joueur_degats_random(const Plongeur* p);
 
 #endif
-

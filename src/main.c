@@ -1,10 +1,9 @@
-#include <stdio.h>
-
 #include <fight.h>
+#include <inventory.h>
 
 static void banner(void) {
     puts("==============================================");
-    puts("      OceanDepth — Prototype console (v0.2)   ");
+    puts("      OceanDepth — v0.3 (inventaire/equip)    ");
     puts("==============================================");
 }
 
@@ -12,16 +11,14 @@ int main(void) {
     srand((unsigned)time(NULL));
     banner();
 
-    Plongeur joueur;
-    joueur_init(&joueur);
+    Plongeur joueur; joueur_init(&joueur);
 
     int profondeur = 50; // zone de départ
     for (;;) {
-        printf("\nMenu : 1-Descendre  2-Explorer  3-Remonter  4-Quitter\n");
-        int ch = lire_entier_borne("> ", 1, 4);
+        printf("\nMenu : 1-Descendre  2-Explorer  3-Remonter  4-Inventaire  5-Quitter\n");
+        int ch = lire_entier_borne("> ", 1, 5);
         if (ch == 1) {
-            profondeur += 50;
-            if (profondeur > 300) profondeur = 300;
+            profondeur += 50; if (profondeur > 300) profondeur = 300;
             printf("Vous descendez. Nouvelle profondeur: -%dm.\n", profondeur);
         } else if (ch == 2) {
             CreatureMarine ennemis[MAX_CREATURES] = {0};
@@ -29,18 +26,18 @@ int main(void) {
             printf("\nVous explorez... %d créature(s) approchent !\n", nb);
             IssueCombat res = lancer_combat(&joueur, ennemis, nb, profondeur);
             if (res == ISSUE_VICTOIRE) {
-                int perles = rand_between(5,15) * nb;
-                joueur.perles += perles;
-                printf("\nVictoire ! Vous ramassez %d perles (total: %d).\n", perles, joueur.perles);
+                puts("\nVictoire !");
+                distribuer_recompenses(&joueur, ennemis, nb, profondeur); // 🆕
             } else if (res == ISSUE_DEFAITE) {
                 puts("\nVous avez succombé dans les abysses... Fin de partie.");
                 break;
             }
             if (joueur.pv <= 0) break;
         } else if (ch == 3) {
-            profondeur -= 50;
-            if (profondeur < 0) profondeur = 0;
+            profondeur -= 50; if (profondeur < 0) profondeur = 0;
             printf("Vous remontez. Profondeur: -%dm.\n", profondeur);
+        } else if (ch == 4) {
+            inv_menu(&joueur); // 🆕
         } else {
             puts("Au revoir.");
             break;
@@ -48,5 +45,3 @@ int main(void) {
     }
     return 0;
 }
-
-
