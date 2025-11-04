@@ -18,4 +18,6 @@ add_executable(OceanDepth
         src/fight.c
         src/save.c
         src/skills.c
+        include/world.h
+        src/world.c
 )
