@@ -1,27 +1,52 @@
 #include <stdio.h>
 
-#include <creature.h>
+#include <fight.h>
 
-static void header(int profondeur){
-    printf("\nOceanDepths - Générateur de créatures  (profondeur: -%dm)\n", profondeur);
-    puts("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+static void banner(void) {
+    puts("==============================================");
+    puts("      OceanDepth — Prototype console (v0.2)   ");
+    puts("==============================================");
 }
 
-int main(void){
+int main(void) {
     srand((unsigned)time(NULL));
-    int profondeur = lire_entier_borne("Choisir profondeur (0..300): ", 0, 300);
+    banner();
 
-    CreatureMarine tab[MAX_CREATURES] = {0};
-    int nb = generer_creatures(tab, profondeur);
-    header(profondeur);
+    Plongeur joueur;
+    joueur_init(&joueur);
 
-    for(int i=0;i<nb;i++){
-        CreatureMarine* c = &tab[i];
-        printf("[%d] %-14s  PV:%3d/%-3d  ATK:%2d-%-2d  DEF:%d  VIT:%d  Effet:%s\n",
-               c->id, c->nom, c->points_de_vie_actuels, c->points_de_vie_max,
-               c->attaque_minimale, c->attaque_maximale, c->defense, c->vitesse, c->effet_special);
+    int profondeur = 50; // zone de départ
+    for (;;) {
+        printf("\nMenu : 1-Descendre  2-Explorer  3-Remonter  4-Quitter\n");
+        int ch = lire_entier_borne("> ", 1, 4);
+        if (ch == 1) {
+            profondeur += 50;
+            if (profondeur > 300) profondeur = 300;
+            printf("Vous descendez. Nouvelle profondeur: -%dm.\n", profondeur);
+        } else if (ch == 2) {
+            CreatureMarine ennemis[MAX_CREATURES] = {0};
+            int nb = generer_creatures(ennemis, profondeur);
+            printf("\nVous explorez... %d créature(s) approchent !\n", nb);
+            IssueCombat res = lancer_combat(&joueur, ennemis, nb, profondeur);
+            if (res == ISSUE_VICTOIRE) {
+                int perles = rand_between(5,15) * nb;
+                joueur.perles += perles;
+                printf("\nVictoire ! Vous ramassez %d perles (total: %d).\n", perles, joueur.perles);
+            } else if (res == ISSUE_DEFAITE) {
+                puts("\nVous avez succombé dans les abysses... Fin de partie.");
+                break;
+            }
+            if (joueur.pv <= 0) break;
+        } else if (ch == 3) {
+            profondeur -= 50;
+            if (profondeur < 0) profondeur = 0;
+            printf("Vous remontez. Profondeur: -%dm.\n", profondeur);
+        } else {
+            puts("Au revoir.");
+            break;
+        }
     }
-    puts("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     return 0;
 }
+
 
