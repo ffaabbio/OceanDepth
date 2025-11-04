@@ -13,10 +13,8 @@ include_directories(include)
 add_executable(OceanDepth
         src/main.c
         src/creature.c
-        include/inventory.h
-        include/player.h
-        include/fight.h
         src/player.c
         src/inventory.c
         src/fight.c
+        src/save.c
 )
