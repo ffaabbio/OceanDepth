@@ -1,5 +1,7 @@
-#include <player.h>
 #include <inventory.h>
+#include <player.h>
+#include <creature.h>
+
 
 // ----- Noms -----
 const char* nom_consommable(int t){

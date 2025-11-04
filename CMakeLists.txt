@@ -4,7 +4,7 @@ project(OceanDepth C)
 set(CMAKE_C_STANDARD 17)
 
 if (MSVC)
-    add_compile_options(/W4)
+    add_compile_options(/W4 /utf-8)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()

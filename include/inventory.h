@@ -7,6 +7,11 @@
 
 #include <common.h>
 
+/* Forward typedefs pour éviter les conflits de types */
+typedef struct Plongeur Plongeur;
+typedef struct CreatureMarine CreatureMarine;
+
+
 // ----- Types d'objets -----
 typedef enum { ITEM_CONS=1, ITEM_HARPON, ITEM_COMBI } ItemKind;
 
@@ -49,12 +54,11 @@ int  inv_add_harpon(Inventaire* inv, HarponType h);
 int  inv_add_combi(Inventaire* inv, CombiType c);
 void inv_print(const Inventaire* inv, int perles);
 
-int  inv_use_menu_combat(struct Plongeur* j);   // menu rapide pendant combat (consommables)
-void inv_menu(struct Plongeur* j);              // grand menu hors combat
+int  inv_use_menu_combat(Plongeur* j);        // menu rapide pendant combat (consommables)
+void inv_menu(Plongeur* j);                   // grand menu hors combat
 
 // ----- Récompenses -----
-void distribuer_recompenses(struct Plongeur* j,
-                            struct CreatureMarine* ennemis, int nb, int profondeur);
-
+void distribuer_recompenses(Plongeur* j,
+                            CreatureMarine* ennemis, int nb, int profondeur);
 #endif
 

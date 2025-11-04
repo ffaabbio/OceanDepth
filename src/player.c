@@ -28,7 +28,10 @@ void harpon_stats(HarponType h, int* amin, int* amax, int* o2c, int* def_ign) {
         case HARPON_LASER:      mi=35; ma=50; oc=5; di=4; break;
         default:                mi=0;  ma=0;  oc=0; di=0; break;
     }
-    if (amin) *amin=mi; if (amax) *amax=ma; if (o2c) *o2c=oc; if (def_ign) *def_ign=di;
+    if (amin) *amin=mi;
+    if (amax) *amax=ma;
+    if (o2c) *o2c=oc;
+    if (def_ign) *def_ign=di;
 }
 
 void combi_stats(CombiType c, int* defb, int* o2delta) {
@@ -39,7 +42,8 @@ void combi_stats(CombiType c, int* defb, int* o2delta) {
         case COMBI_TITANIUM:  db=25; od=-2; break;
         default:              db=0;  od=0;  break;
     }
-    if (defb) *defb=db; if (o2delta) *o2delta=od;
+    if (defb) *defb=db;
+    if (o2delta) *o2delta=od;
 }
 
 // ----- Stats effectives -----
@@ -82,4 +86,3 @@ int joueur_degats_random(const Plongeur* p) {
     if (ma < mi) ma = mi;
     return rand_between(mi, ma);
 }
-
