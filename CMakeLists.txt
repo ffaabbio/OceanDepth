@@ -1,16 +1,12 @@
-cmake_minimum_required(VERSION 3.10)
-project(OceanDepths C)
+cmake_minimum_required(VERSION 4.0)
+project(OceanDepth C)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 17)
 
-# Include header files
 include_directories(include)
-
-# Add all source files
-add_executable(OceanDepths
+add_executable(OceanDepth
         src/main.c
-        src/player.c
+        include/creature.h
         src/creature.c
-        src/fight.c
-        src/inventory.c
+        include/common.h
 )
