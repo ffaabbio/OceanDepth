@@ -16,6 +16,8 @@ void joueur_init(Plongeur* p) {
     // Donne 1 capsule O2 et 1 trousse
     inv_add_consumable(&p->inv, CONS_O2,   1);
     inv_add_consumable(&p->inv, CONS_SOIN, 1);
+
+    for (int i=0;i<SK_COUNT;i++) p->skill_cd[i] = 0;
 }
 
 // ----- Équipements -----

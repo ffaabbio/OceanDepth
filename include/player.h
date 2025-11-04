@@ -7,6 +7,7 @@
 
 #include <common.h>
 #include <inventory.h>
+#include <skills.h>
 
 typedef struct Plongeur {
     int pv_max, pv;
@@ -15,6 +16,7 @@ typedef struct Plongeur {
     int perles;       // monnaie
     int base_atk_min, base_atk_max;
     int base_defense;
+    int skill_cd[SK_COUNT];
     Inventaire inv;
 } Plongeur;
 

@@ -4,7 +4,7 @@
 
 static void banner(void) {
     puts("==============================================");
-    puts("      OceanDepth — v0.4 (save/load)           ");
+    puts("      OceanDepth - v0.4 (save/load)           ");
     puts("==============================================");
 }
 

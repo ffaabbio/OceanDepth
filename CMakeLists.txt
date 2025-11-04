@@ -17,4 +17,5 @@ add_executable(OceanDepth
         src/inventory.c
         src/fight.c
         src/save.c
+        src/skills.c
 )
