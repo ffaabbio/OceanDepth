@@ -172,7 +172,7 @@ void inv_menu(Plongeur* j){
 }
 
 // ----- Récompenses après victoire -----
-void distribuer_recompenses(Plongeur* j, struct CreatureMarine* ennemis, int nb, int profondeur){
+void distribuer_recompenses(Plongeur* j, CreatureMarine* ennemis, int nb, int profondeur){
     int perles = 0;
     for (int i=0;i<nb;i++){
         // Perles communes

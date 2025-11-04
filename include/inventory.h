@@ -58,7 +58,6 @@ int  inv_use_menu_combat(Plongeur* j);        // menu rapide pendant combat (con
 void inv_menu(Plongeur* j);                   // grand menu hors combat
 
 // ----- Récompenses -----
-void distribuer_recompenses(Plongeur* j,
-                            CreatureMarine* ennemis, int nb, int profondeur);
+void distribuer_recompenses(Plongeur* j, CreatureMarine* ennemis, int nb, int profondeur);
 #endif
 
