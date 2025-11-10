@@ -61,35 +61,21 @@ Zone generateDangerZone(int depths) {
 
     switch (x) {
         case 0:
-            strcpy(zone.name, "Requin");
-
-            creature.maxHealthPoints = 80 * (1 + depths/10);
-            creature.currentHealthPoints = creature.maxHealthPoints;
-            creature.minAttack =  10 * (1 + depths/10);
-            creature.maxAttack = 20 * (1 + depths/10);
-            creature.isAlive = 1;
+            zone.creatures[1] = spawnCreature("Requin", 80, 10, 20, 25, 15, "", 1, depths);
 
             return zone;
         case 1:
-            strcpy(zone.name, "Requin Blanc");
-
-            creature.maxHealthPoints = 145 * (1 + depths/10);
-            creature.currentHealthPoints = creature.maxHealthPoints;
-            creature.minAttack =  12 * (1 + depths/10);
-            creature.maxAttack = 18 * (1 + depths/10);
-            creature.isAlive = 1;
+            zone.creatures[1] = spawnCreature("Requin Blanc", 145, 12, 18, 25, 15, "", 1, depths);
 
             return zone;
         case 2:
             strcpy(zone.name, "Anguilles");
 
-            creature.maxHealthPoints = 25 * (1 + depths/10);
-            creature.currentHealthPoints = creature.maxHealthPoints;
-            creature.minAttack =  12 * (1 + depths/10);
-            creature.maxAttack = 18 * (1 + depths/10);
-            creature.isAlive = 1;
+            zone.creatures[1] = spawnCreature("Anguilles", 25, 12, 18, 5, 15, "", 1, depths);
+            zone.creatures[2] = spawnCreature("Anguilles", 25, 12, 18, 5, 15, "", 1, depths);
+            zone.creatures[3] = spawnCreature("Anguilles", 25, 12, 18, 5, 15, "", 1, depths);
 
-            break;
+            return zone;
         case 3:
             strcpy(zone.name, "Kraken");
             break;

@@ -16,4 +16,6 @@ typedef struct {
 
 void displayCreature(const Creature *c);
 
+Creature spawnCreature(char* name, int maxHealthPoints, int minAttack, int maxAttack, int defense, int speed, char* specialEffect, int isAlive, int depth);
+
 #endif
