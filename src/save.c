@@ -34,11 +34,11 @@ int save_game(const char* path, const Plongeur* j, int profondeur, int en_grotte
 
     FILE* f = fopen(path, "w");
     if (!f) {
-        fprintf(stderr, "Erreur: impossible d'ouvrir '%s' en écriture : %s\n", path, strerror(errno));
+        fprintf(stderr, "Erreur: impossible d'ouvrir '%s' en ecriture : %s\n", path, strerror(errno));
         return 0;
     }
 
-    /* Ligne 1 : entête */
+    /* Ligne 1 : entete */
     fprintf(f, "%s\n", SAVE_MAGIC);
     /* Ligne 2 : profondeur + grotte */
     fprintf(f, "PROFONDEUR %d GROTTE %d\n", profondeur, en_grotte ? 1 : 0);
@@ -46,7 +46,7 @@ int save_game(const char* path, const Plongeur* j, int profondeur, int en_grotte
     fprintf(f, "JOUEUR %d %d %d %d %d %d %d %d %d\n",
             j->pv, j->pv_max, j->o2, j->o2_max, j->fatigue, j->perles,
             j->base_atk_min, j->base_atk_max, j->base_defense);
-    /* Ligne 4 : équipements */
+    /* Ligne 4 : equipements */
     fprintf(f, "EQUIP %d %d\n", j->inv.eq_harpon, j->inv.eq_combi);
 
     /* Ligne 5 : inventaire */
@@ -60,7 +60,7 @@ int save_game(const char* path, const Plongeur* j, int profondeur, int en_grotte
     }
 
     fclose(f);
-    printf("Sauvegarde effectuée dans '%s'.\n", path);
+    printf("Sauvegarde effectuee dans '%s'.\n", path);
     return 1;
 }
 
@@ -75,11 +75,11 @@ int load_game(const char* path, Plongeur* j, int* profondeur, int* en_grotte){
 
     char magic[64]={0};
     if (!fgets(magic, sizeof magic, f)) { fclose(f); return 0; }
-    /* enlever \n éventuel */
+    /* enlever \n eventuel */
     size_t L = strlen(magic); if (L && magic[L-1]=='\n') magic[L-1]=0;
 
     if (strcmp(magic, SAVE_MAGIC) != 0) {
-        fprintf(stderr, "Fichier de sauvegarde invalide (entête inattendue).\n");
+        fprintf(stderr, "Fichier de sauvegarde invalide (entete inattendue).\n");
         fclose(f); return 0;
     }
 
@@ -112,7 +112,7 @@ int load_game(const char* path, Plongeur* j, int* profondeur, int* en_grotte){
         fclose(f); return 0;
     }
 
-    /* Réinitialiser l’inventaire avant de remplir */
+    /* Reinitialiser l'inventaire avant de remplir */
     for (int i=0;i<INV_MAX;i++){ j->inv.slots[i].kind=0; j->inv.slots[i].subtype=0; j->inv.slots[i].qty=0; }
 
     for (int k=0;k<inv_count;k++){
@@ -154,7 +154,7 @@ int load_game(const char* path, Plongeur* j, int* profondeur, int* en_grotte){
     j->base_atk_max = bax;
     j->base_defense = bdef;
 
-    /* Équipements (bornage simple) */
+    /* Equipements (bornage simple) */
     j->inv.eq_harpon = (eh >= HARPON_NONE && eh <= HARPON_LASER) ? (HarponType)eh : HARPON_ROUILLE;
     j->inv.eq_combi  = (ec >= COMBI_NONE  && ec <= COMBI_TITANIUM) ? (CombiType)ec : COMBI_NEOPRENE;
 
@@ -162,7 +162,6 @@ int load_game(const char* path, Plongeur* j, int* profondeur, int* en_grotte){
     *en_grotte  = grot ? 1 : 0;
 
     fclose(f);
-    printf("Sauvegarde chargée depuis '%s'.\n", path);
+    printf("Sauvegarde chargee depuis '%s'.\n", path);
     return 1;
 }
-

@@ -7,7 +7,7 @@
 
 #include <common.h>
 
-/* Forward typedefs pour éviter les conflits de types */
+/* Forward typedefs pour eviter les conflits de types */
 typedef struct Plongeur Plongeur;
 typedef struct CreatureMarine CreatureMarine;
 
@@ -28,7 +28,7 @@ typedef enum {
 typedef struct {
     ItemKind kind;
     int      subtype;   // ConsommableType | HarponType | CombiType
-    int      qty;       // quantité (1 pour les équipements)
+    int      qty;       // quantite (1 pour les equipements)
 } Item;
 
 #define INV_MAX 8
@@ -44,7 +44,7 @@ const char* nom_consommable(int sub);
 const char* nom_harpon(int sub);
 const char* nom_combi(int sub);
 
-// ----- Statistiques d'équipement (absolues) -----
+// ----- Statistiques d'equipement (absolues) -----
 void harpon_stats(HarponType h, int* atk_min, int* atk_max, int* o2_cost, int* def_ignore);
 void combi_stats(CombiType c, int* def_bonus, int* o2_passive_delta);
 
@@ -57,7 +57,6 @@ void inv_print(const Inventaire* inv, int perles);
 int  inv_use_menu_combat(Plongeur* j);        // menu rapide pendant combat (consommables)
 void inv_menu(Plongeur* j);                   // grand menu hors combat
 
-// ----- Récompenses -----
+// ----- Recompenses -----
 void distribuer_recompenses(Plongeur* j, CreatureMarine* ennemis, int nb, int profondeur);
 #endif
-

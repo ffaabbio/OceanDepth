@@ -12,7 +12,7 @@
 
 #include <common.h>
 
-/* Forward pour éviter les cycles */
+/* Forward pour eviter les cycles */
 typedef struct Plongeur Plongeur;
 
 typedef enum {
@@ -25,7 +25,7 @@ typedef enum {
 
 const char* skill_name(SkillId id);
 
-/* Donne coût O2 et CD de base de la compétence (indépendants de la profondeur pour v1) */
+/* Donne cout O2 et CD de base de la competence (independants de la profondeur pour v1) */
 static inline void skill_cost_cd(const Plongeur* j, SkillId id, int profondeur, int* o2_cost, int* cd_base) {
     (void)j; (void)profondeur;
     int c = 0, cd = 0;
@@ -41,4 +41,3 @@ static inline void skill_cost_cd(const Plongeur* j, SkillId id, int profondeur, 
 }
 
 #endif
-

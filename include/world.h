@@ -7,7 +7,7 @@
 
 #include <common.h>
 
-/* Forward pour éviter les cycles */
+/* Forward pour eviter les cycles */
 typedef struct Plongeur Plongeur;
 
 #define WORLD_W 5
@@ -34,11 +34,10 @@ typedef struct {
     Zone cells[WORLD_H][WORLD_W];
 } World;
 
-void world_init(World* w);                                  // génère la carte et place le joueur à la surface
+void world_init(World* w);                                  // genere la carte et place le joueur a la surface
 void world_print(const World* w, const Plongeur* j);        // affiche carte + position + infos combi
 const Zone* world_current_zone(const World* w);             // renvoie la zone courante
-int  world_move(World* w, Plongeur* j, int dx, int dy, int* nouvelle_profondeur); // déplacement + coût O2
-int  world_can_enter(const Plongeur* j, const Zone* z);     // vérifie l’équipement pour la profondeur
+int  world_move(World* w, Plongeur* j, int dx, int dy, int* nouvelle_profondeur); // deplacement + cout O2
+int  world_can_enter(const Plongeur* j, const Zone* z);     // verifie l'equipement pour la profondeur
 
 #endif
-

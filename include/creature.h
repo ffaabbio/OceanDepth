@@ -15,7 +15,7 @@ typedef enum {
     TYPE_CRABE
 } TypeCreature;
 
-/* IMPORTANT : struct TAGGÉE pour matcher le forward 'typedef struct CreatureMarine CreatureMarine;' */
+/* IMPORTANT : struct TAGGEE pour matcher le forward 'typedef struct CreatureMarine CreatureMarine;' */
 typedef struct CreatureMarine {
     int id;                       // 1..MAX_CREATURES
     TypeCreature type;
@@ -35,4 +35,3 @@ int generer_creatures(CreatureMarine out[MAX_CREATURES], int profondeur);
 const char* creature_type_nom(TypeCreature t);
 
 #endif
-

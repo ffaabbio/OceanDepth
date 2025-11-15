@@ -23,14 +23,14 @@ typedef struct Plongeur {
 // Init joueur
 void joueur_init(Plongeur* p);
 
-// Stats effectives (avec équipements)
+// Stats effectives (avec equipements)
 int  joueur_atk_min(const Plongeur* p);
 int  joueur_atk_max(const Plongeur* p);
 int  joueur_defense_totale(const Plongeur* p);
 int  joueur_o2_cout_action(const Plongeur* p, int profondeur);
 int  joueur_o2_cout_passif(const Plongeur* p, int profondeur);
 
-// Tirage de dégâts (avec harpon si équipé)
+// Tirage de degats (avec harpon si equipe)
 int  joueur_degats_random(const Plongeur* p);
 
 #endif

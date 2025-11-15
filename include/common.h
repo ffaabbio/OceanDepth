@@ -25,7 +25,7 @@ static inline int lire_entier_borne(const char* invite,int min,int max){
         char *end; long v=strtol(buf,&end,10);
         while(end && *end && isspace((unsigned char)*end)) end++;
         if(end && *end=='\0' && v>=min && v<=max) return (int)v;
-        printf("Entrée invalide. Saisir un nombre entre %d et %d.\n",min,max);
+        printf("Entree invalide. Saisir un nombre entre %d et %d.\n",min,max);
     }
 }
 #endif

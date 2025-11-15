@@ -8,7 +8,7 @@ void joueur_init(Plongeur* p) {
     p->base_atk_min = 16; p->base_atk_max = 26;
     p->base_defense = 3;
 
-    // Inventaire & équipements de départ
+    // Inventaire & equipements de depart
     for (int i=0;i<INV_MAX;i++){ p->inv.slots[i].kind=0; p->inv.slots[i].subtype=0; p->inv.slots[i].qty=0; }
     p->inv.eq_harpon = HARPON_ROUILLE;
     p->inv.eq_combi  = COMBI_NEOPRENE;
@@ -20,7 +20,7 @@ void joueur_init(Plongeur* p) {
     for (int i=0;i<SK_COUNT;i++) p->skill_cd[i] = 0;
 }
 
-// ----- Équipements -----
+// ----- Equipements -----
 void harpon_stats(HarponType h, int* amin, int* amax, int* o2c, int* def_ign) {
     int mi=0, ma=0, oc=0, di=0;
     switch (h) {
@@ -39,7 +39,7 @@ void harpon_stats(HarponType h, int* amin, int* amax, int* o2c, int* def_ign) {
 void combi_stats(CombiType c, int* defb, int* o2delta) {
     int db=0, od=0;
     switch (c) {
-        case COMBI_NEOPRENE:  db=5;  od=-1; break; // -1 O2/tour (réduit la conso)  ✔
+        case COMBI_NEOPRENE:  db=5;  od=-1; break; // -1 O2/tour (reduite la conso)
         case COMBI_COMPOSITE: db=12; od=-1; break;
         case COMBI_TITANIUM:  db=25; od=-2; break;
         default:              db=0;  od=0;  break;

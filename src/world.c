@@ -1,5 +1,5 @@
 #include <world.h>
-#include <player.h>     // pour accéder à la combi et aux coûts O2
+#include <player.h>     // pour acceder a la combi et aux couts O2
 #include <inventory.h>  // noms combi
 
 static ZoneType pick_zone_for_row(int row){
@@ -42,7 +42,7 @@ void world_init(World* w){
             w->cells[y][x].visited = 0;
         }
     }
-    // Ligne surface = 0 → force SURFACE partout
+    // Ligne surface = 0 -> force SURFACE partout
     for(int x=0;x<w->w;x++){
         w->cells[0][x].type = Z_SURFACE;
         w->cells[0][x].profondeur = 0;
@@ -57,7 +57,7 @@ const Zone* world_current_zone(const World* w){
 }
 
 int world_can_enter(const Plongeur* j, const Zone* z){
-    // exigences combi : -150 → Composite, -300 → Titanium
+    // exigences combi : -150 -> Composite, -300 -> Titanium
     if (z->profondeur >= 300) {
         return j->inv.eq_combi >= COMBI_TITANIUM;
     }
@@ -90,18 +90,18 @@ void world_print(const World* w, const Plongeur* j){
         }
         puts("");
     }
-    puts("Légende: S=Surface, R=Récifs, A=Algues, E=Epave, G=Grotte, F=Fosse, P=Vous");
-    // Info combi & accès
+    puts("Legende: S=Surface, R=Recifs, A=Algues, E=Epave, G=Grotte, F=Fosse, P=Vous");
+    // Info combi & acces
     int db, od; combi_stats(j->inv.eq_combi, &db, &od);
-    printf("Combi équipée: %s  (DEF +%d, O2/tour %d)\n", nom_combi(j->inv.eq_combi), db, od);
-    puts("Règles d'accès: -150m => Combi Composite ; -300m => Combi Titanium");
+    printf("Combi equipee: %s  (DEF +%d, O2/tour %d)\n", nom_combi(j->inv.eq_combi), db, od);
+    puts("Regles d'acces: -150m => Combi Composite ; -300m => Combi Titanium");
 }
 
 static void apply_o2_move_and_check(Plongeur* j, int profondeur){
-    j->o2 -= joueur_o2_cout_passif(j, profondeur); // coût de déplacement basé sur profondeur d'arrivée
+    j->o2 -= joueur_o2_cout_passif(j, profondeur); // cout de deplacement base sur profondeur d'arrivee
     if (j->o2 < 0) j->o2 = 0;
     if (j->o2 == 0){
-        puts("[CRITIQUE] Oxygène épuisé lors du déplacement ! Vous suffoquez (-5 PV).");
+        puts("[CRITIQUE] Oxygene epuise lors du deplacement ! Vous suffoquez (-5 PV).");
         j->pv -= 5;
         if (j->pv < 0) j->pv = 0;
     }
@@ -116,18 +116,18 @@ int world_move(World* w, Plongeur* j, int dx, int dy, int* nouvelle_profondeur){
     }
     const Zone* target = &w->cells[ny][nx];
     if (!world_can_enter(j, target)){
-        puts("Accès refusé: combinaison insuffisante pour cette profondeur.");
+        puts("Acces refuse: combinaison insuffisante pour cette profondeur.");
         return 0;
     }
-    // Appliquer le coût O2 du déplacement (profondeur d'arrivée)
+    // Appliquer le cout O2 du deplacement (profondeur d'arrivee)
     apply_o2_move_and_check(j, target->profondeur);
     if (j->pv <= 0){
-        // on a suffoqué jusqu'à la mort; ne pas déplacer
+        // on a suffoque jusqu'a la mort; ne pas deplacer
         return 0;
     }
     w->px = nx; w->py = ny;
     w->cells[ny][nx].visited = 1;
     if (nouvelle_profondeur) *nouvelle_profondeur = target->profondeur;
-    printf("Vous vous déplacez en -%dm, zone %c.\n", target->profondeur, zone_char(target->type));
+    printf("Vous vous deplacez en -%dm, zone %c.\n", target->profondeur, zone_char(target->type));
     return 1;
 }

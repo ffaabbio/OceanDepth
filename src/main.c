@@ -5,7 +5,7 @@
 
 static void banner(void) {
     puts("==============================================");
-    puts("      OceanDepth — v0.5 (carte/exploration)   ");
+    puts("      OceanDepth - v0.5 (carte/exploration)   ");
     puts("==============================================");
 }
 
@@ -28,9 +28,9 @@ int main(void) {
         int ch = lire_entier_borne("> ", 1, 7);
 
         if (ch == 1) {
-            if (en_grotte) { puts("Vous êtes dans une grotte. Sortez avant de vous déplacer."); continue; }
+            if (en_grotte) { puts("Vous etes dans une grotte. Sortez avant de vous deplacer."); continue; }
             world_print(&world, &joueur);
-            puts("Déplacements: Z=Haut  S=Bas  Q=Gauche  D=Droite  (ou 0 pour retour)");
+            puts("Deplacements: Z=Haut  S=Bas  Q=Gauche  D=Droite  (ou 0 pour retour)");
             for (;;) {
                 char buf[16]={0};
                 if (!fgets(buf, sizeof buf, stdin)) { clearerr(stdin); break; }
@@ -42,26 +42,26 @@ int main(void) {
                 else if (buf[0]=='d' || buf[0]=='D') dx=+1;
                 else { puts("Touche invalide. Z/S/Q/D ou 0 pour quitter."); continue; }
                 if (world_move(&world, &joueur, dx, dy, &profondeur)){
-                    // ok; afficher mini état
+                    // ok; afficher mini etat
                     printf("Etat: PV=%d/%d  O2=%d/%d  Fatigue=%d  Perles=%d\n",
                            joueur.pv, joueur.pv_max, joueur.o2, joueur.o2_max, joueur.fatigue, joueur.perles);
                 }
-                if (joueur.pv <= 0) { puts("Vous avez succombé... Fin de partie."); return 0; }
+                if (joueur.pv <= 0) { puts("Vous avez succombe... Fin de partie."); return 0; }
             }
 
         } else if (ch == 2) {
             const Zone* z = world_current_zone(&world);
             if (en_grotte || z->type == Z_GROTTE) {
-                puts("Zone sûre (grotte) : rien à explorer ici.");
+                puts("Zone sure (grotte) : rien a explorer ici.");
                 continue;
             }
             if (z->type == Z_EPAVE) {
-                // 60% trésor, 40% combat court
+                // 60% tresor, 40% combat court
                 int r = rand_between(1,100);
                 if (r <= 60){
                     int bonus = rand_between(10,25);
                     joueur.perles += bonus;
-                    puts("[Epave] Vous trouvez un trésor !");
+                    puts("[Epave] Vous trouvez un tresor !");
                     printf("+%d perles (total: %d).\n", bonus, joueur.perles);
                     if (rand_between(1,100) <= 50) inv_add_consumable(&joueur.inv, CONS_SOIN, 1);
                     if (rand_between(1,100) <= 35) inv_add_consumable(&joueur.inv, CONS_O2, 1);
@@ -69,19 +69,19 @@ int main(void) {
                 } else {
                     CreatureMarine ennemis[MAX_CREATURES]={0};
                     int nb = generer_creatures(ennemis, profondeur);
-                    printf("\nDes créatures gardent l'épave... %d ennemi(s)!\n", nb);
+                    printf("\nDes creatures gardent l'epave... %d ennemi(s)!\n", nb);
                     IssueCombat res = lancer_combat(&joueur, ennemis, nb, profondeur);
                     if (res == ISSUE_VICTOIRE) distribuer_recompenses(&joueur, ennemis, nb, profondeur);
-                    else { puts("Vous avez succombé..."); break; }
+                    else { puts("Vous avez succombe..."); break; }
                 }
             } else {
-                // exploration classique → combat
+                // exploration classique -> combat
                 CreatureMarine ennemis[MAX_CREATURES]={0};
                 int nb = generer_creatures(ennemis, profondeur);
-                printf("\nVous explorez... %d créature(s) approchent !\n", nb);
+                printf("\nVous explorez... %d creature(s) approchent !\n", nb);
                 IssueCombat res = lancer_combat(&joueur, ennemis, nb, profondeur);
                 if (res == ISSUE_VICTOIRE) distribuer_recompenses(&joueur, ennemis, nb, profondeur);
-                else { puts("Vous avez succombé..."); break; }
+                else { puts("Vous avez succombe..."); break; }
             }
 
         } else if (ch == 3) {
@@ -90,27 +90,27 @@ int main(void) {
         } else if (ch == 4) {
             const Zone* z = world_current_zone(&world);
             if (z->type != Z_GROTTE) {
-                puts("Aucune grotte ici. Déplacez-vous vers une case 'G'.");
+                puts("Aucune grotte ici. Deplacez-vous vers une case 'G'.");
                 continue;
             }
             en_grotte = !en_grotte;
-            if (en_grotte) puts("Vous entrez dans la grotte (zone sûre).");
+            if (en_grotte) puts("Vous entrez dans la grotte (zone sure).");
             else puts("Vous sortez de la grotte.");
 
         } else if (ch == 5) {
             if (!peut_sauver(profondeur, en_grotte)) {
-                puts("Sauvegarde refusée : autorisée uniquement en surface ou dans une grotte.");
+                puts("Sauvegarde refusee : autorisee uniquement en surface ou dans une grotte.");
                 continue;
             }
             if (!save_game("saves/slot1.save", &joueur, profondeur, en_grotte)) {
-                puts("Échec de la sauvegarde.");
+                puts("Echec de la sauvegarde.");
             }
 
         } else if (ch == 6) {
             if (!load_game("saves/slot1.save", &joueur, &profondeur, &en_grotte)) {
-                puts("Échec du chargement.");
+                puts("Echec du chargement.");
             } else {
-                // recaler la position sur la ligne correspondant à la profondeur, colonne centrale
+                // recaler la position sur la ligne correspondant a la profondeur, colonne centrale
                 world.px = world.w/2;
                 if (profondeur==0) world.py=0;
                 else if (profondeur<=50) world.py=1;

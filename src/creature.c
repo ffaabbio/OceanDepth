@@ -10,9 +10,9 @@ const char* creature_type_nom(TypeCreature t){
     switch(t){
         case TYPE_KRAKEN: return "Kraken";
         case TYPE_REQUIN: return "Requin-Tigre";
-        case TYPE_MEDUSE: return "Méduse Bleue";
-        case TYPE_POISSON_EPEE: return "Poisson-Épée";
-        case TYPE_CRABE:  return "Crabe Géant";
+        case TYPE_MEDUSE: return "Meduse Bleue";
+        case TYPE_POISSON_EPEE: return "Poisson-Epee";
+        case TYPE_CRABE:  return "Crabe Geant";
         default: return "Inconnu";
     }
 }
