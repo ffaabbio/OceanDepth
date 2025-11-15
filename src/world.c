@@ -80,22 +80,49 @@ static char zone_char(ZoneType t){
 }
 
 void world_print(const World* w, const Plongeur* j){
-    puts("\n=== Cartographie Oceanique (4x5) ===");
-    for(int y=0;y<w->h;y++){
-        printf("Profondeur -%dm  | ", depth_for_row(y));
-        for(int x=0;x<w->w;x++){
-            int isP = (x==w->px && y==w->py);
-            char c = zone_char(w->cells[y][x].type);
-            printf("%c%s ", isP ? 'P' : c, isP ? "" : "");
+    puts("");
+    puts("============== Carte OceanDepth ==============");
+    puts("");
+
+    // En-tete des colonnes
+    printf("          ");
+    for (int x = 0; x < w->w; ++x) {
+        printf("  %d   ", x);
+    }
+    puts("");
+    puts("        +-----+-----+-----+-----+-----+");
+
+    for (int y = 0; y < w->h; ++y) {
+        int depth = depth_for_row(y);   // fonction deja presente dans world.c
+
+        // Etiquette de ligne = profondeur
+        printf("%4dm   |", -depth);
+
+        for (int x = 0; x < w->w; ++x) {
+            int isP = (x == w->px && y == w->py);
+            char c  = zone_char(w->cells[y][x].type); // deja definie dans world.c
+            printf("  %c  |", isP ? 'P' : c);
         }
         puts("");
+        puts("        +-----+-----+-----+-----+-----+");
     }
-    puts("Legende: S=Surface, R=Recifs, A=Algues, E=Epave, G=Grotte, F=Fosse, P=Vous");
-    // Info combi & acces
-    int db, od; combi_stats(j->inv.eq_combi, &db, &od);
-    printf("Combi equipee: %s  (DEF +%d, O2/tour %d)\n", nom_combi(j->inv.eq_combi), db, od);
-    puts("Regles d'acces: -150m => Combi Composite ; -300m => Combi Titanium");
+
+    puts("");
+    puts("Legende des zones :");
+    puts("  S = Surface     R = Recifs      A = Algues");
+    puts("  E = Epave       G = Grotte      F = Fosse");
+    puts("  P = Position du joueur");
+
+    int db, od;
+    combi_stats(j->inv.eq_combi, &db, &od);
+    printf("\nCombi equipee: %s  (DEF +%d, O2/tour %d)\n",
+           nom_combi(j->inv.eq_combi), db, od);
+
+    puts("Regles d'acces :");
+    puts("  -150m et plus profond => Combi Composite minimale");
+    puts("  -300m                 => Combi Titanium obligatoire");
 }
+
 
 static void apply_o2_move_and_check(Plongeur* j, int profondeur){
     j->o2 -= joueur_o2_cout_passif(j, profondeur); // cout de deplacement base sur profondeur d'arrivee

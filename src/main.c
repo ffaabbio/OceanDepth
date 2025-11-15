@@ -30,7 +30,7 @@ int main(void) {
         if (ch == 1) {
             if (en_grotte) { puts("Vous etes dans une grotte. Sortez avant de vous deplacer."); continue; }
             world_print(&world, &joueur);
-            puts("Deplacements: Z=Haut  S=Bas  Q=Gauche  D=Droite  (ou 0 pour retour)");
+            puts("Deplacements : Z=Haut, S=Bas, Q=Gauche, D=Droite, 0=Retour au menu.");
             for (;;) {
                 char buf[16]={0};
                 if (!fgets(buf, sizeof buf, stdin)) { clearerr(stdin); break; }
