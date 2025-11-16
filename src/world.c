@@ -93,14 +93,13 @@ void world_print(const World* w, const Plongeur* j){
     puts("        +-----+-----+-----+-----+-----+");
 
     for (int y = 0; y < w->h; ++y) {
-        int depth = depth_for_row(y);   // fonction deja presente dans world.c
+        int depth = depth_for_row(y);
 
-        // Etiquette de ligne = profondeur
         printf("%4dm   |", -depth);
 
         for (int x = 0; x < w->w; ++x) {
             int isP = (x == w->px && y == w->py);
-            char c  = zone_char(w->cells[y][x].type); // deja definie dans world.c
+            char c  = zone_char(w->cells[y][x].type);
             printf("  %c  |", isP ? 'P' : c);
         }
         puts("");
@@ -113,6 +112,7 @@ void world_print(const World* w, const Plongeur* j){
     puts("  E = Epave       G = Grotte      F = Fosse");
     puts("  P = Position du joueur");
 
+    // Infos combi
     int db, od;
     combi_stats(j->inv.eq_combi, &db, &od);
     printf("\nCombi equipee: %s  (DEF +%d, O2/tour %d)\n",
@@ -121,7 +121,25 @@ void world_print(const World* w, const Plongeur* j){
     puts("Regles d'acces :");
     puts("  -150m et plus profond => Combi Composite minimale");
     puts("  -300m                 => Combi Titanium obligatoire");
+
+    // infos sur la case actuelle
+    const Zone* z = world_current_zone(w);
+    char zc = zone_char(z->type);
+    const char* zname = "?";
+    switch (z->type) {
+        case Z_SURFACE: zname = "Surface"; break;
+        case Z_RECIF:   zname = "Recifs"; break;
+        case Z_ALGUES:  zname = "Algues"; break;
+        case Z_EPAVE:   zname = "Epave"; break;
+        case Z_GROTTE:  zname = "Grotte"; break;
+        case Z_FOSSE:   zname = "Fosse"; break;
+        default:        zname = "Inconnu"; break;
+    }
+
+    printf("\nPosition actuelle : profondeur -%dm, zone %c (%s)\n",
+           z->profondeur, zc, zname);
 }
+
 
 
 static void apply_o2_move_and_check(Plongeur* j, int profondeur){

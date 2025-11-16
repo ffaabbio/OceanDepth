@@ -12,7 +12,7 @@ static void print_bar(const char* label, int val, int max, int largeur) {
 }
 
 static void afficher_etat(const Plongeur* j, const CreatureMarine* c, int nb, int profondeur) {
-    printf("\n=== OceanDepth — Profondeur: -%dm ===\n", profondeur);
+    printf("\n=== OceanDepth - Profondeur: -%dm ===\n", profondeur);
     print_bar("Vie", j->pv, j->pv_max, 40);
     print_bar("Oxygene", j->o2, j->o2_max, 30);
     printf("Fatigue   [%d/5]\n", j->fatigue);
@@ -81,57 +81,75 @@ static void show_skills(const Plongeur* j, int profondeur){
     }
 }
 
-static int use_skill(Plongeur* j, int profondeur, EffetsCombat* eff, CreatureMarine ennemis[], int nb){
+static int use_skill(Plongeur* j, int profondeur, EffetsCombat* eff,
+                     CreatureMarine ennemis[], int nb){
     show_skills(j, profondeur);
-    int choix = lire_entier_borne("> ", 1, SK_COUNT);
+    puts("  0) Retour");
+
+    int choix = lire_entier_borne("> ", 0, SK_COUNT);
+    if (choix == 0) return 0;  // retour au menu de combat
+
     SkillId id = (SkillId)(choix - 1);
 
-    if (j->skill_cd[id] > 0) { puts("Cette competence est en cooldown."); return 0; }
+    if (j->skill_cd[id] > 0) {
+        printf("Cette competence est en cooldown (%d tour(s) restant(s)).\n", j->skill_cd[id]);
+        return 0;
+    }
 
-    int cost, cd; skill_cost_cd(j, id, profondeur, &cost, &cd);
-    if (j->o2 < cost) { puts("Oxygene insuffisant pour cette competence."); return 0; }
+    int cost, cd;
+    skill_cost_cd(j, id, profondeur, &cost, &cd);
+    if (j->o2 < cost) {
+        puts("Oxygene insuffisant pour cette competence.");
+        return 0;
+    }
 
     switch (id) {
-        case SK_APNEE: {
+        case SK_APNEE:
             j->o2 = clampi(j->o2 + 20, 0, j->o2_max);
             puts("[Apnee Prolongee] +20 O2.");
             j->skill_cd[id] = cd;
-        } break;
+            break;
         case SK_DECHARGE: {
             int total = 0, cibles = 0;
             for (int i=0;i<nb;i++){
                 if (!ennemis[i].est_vivant) continue;
                 int d = rand_between(20,30);
-                total += appliquer_degats_creature(&ennemis[i], d); cibles++;
+                total += appliquer_degats_creature(&ennemis[i], d);
+                cibles++;
             }
-            printf("[Decharge Electrique] %d cibles touchees, total ~%d degats.\n", cibles, total);
+            printf("[Decharge Electrique] %d cibles touchees, total ~%d degats.\n",
+                   cibles, total);
             j->o2 = clampi(j->o2 - cost, 0, j->o2_max);
             j->skill_cd[id] = cd;
         } break;
         case SK_COMMUNICATION: {
-            // choisir cible vivante
             int ids[MAX_CREATURES], nids=0;
             for (int i=0;i<nb;i++) if (ennemis[i].est_vivant) ids[nids++] = ennemis[i].id;
             if (nids == 0) { puts("Aucune cible."); return 0; }
-            printf("Cible a pacifier ? "); for (int i=0;i<nids;i++) printf("%d%s", ids[i], (i+1==nids)?"":" ");
-            printf("\n");
-            int cid = lire_entier_borne("> ", 1, MAX_CREATURES);
-            // appliquer 1 tour de pacif
+            printf("Cible a pacifier ? ");
+            for (int i=0;i<nids;i++) printf("%d%s", ids[i], (i+1==nids)?"":" ");
+            printf("  (0 = Retour)\n");
+            int cid = lire_entier_borne("> ", 0, MAX_CREATURES);
+            if (cid == 0) return 0;
             eff->pacify_turns[cid-1] = 1;
             printf("[Communication Marine] La creature #%d sera pacifiee 1 tour.\n", cid);
             j->o2 = clampi(j->o2 - cost, 0, j->o2_max);
             j->skill_cd[id] = cd;
         } break;
-        case SK_TOURBILLON: {
-            for (int i=0;i<nb;i++) if (ennemis[i].est_vivant) eff->speed_delta[ennemis[i].id-1] = -2;
+        case SK_TOURBILLON:
+            for (int i=0;i<nb;i++)
+                if (ennemis[i].est_vivant)
+                    eff->speed_delta[ennemis[i].id-1] = -2;
             puts("[Tourbillon] -2 Vitesse pour toutes les creatures jusqu'au prochain tour.");
             j->o2 = clampi(j->o2 - cost, 0, j->o2_max);
             j->skill_cd[id] = cd;
-        } break;
-        default: return 0;
+            break;
+        default:
+            return 0;
     }
     return 1;
 }
+
 /* ==== FIN AJOUT COMPETENCES ==== */
 
 IssueCombat lancer_combat(Plongeur* j, CreatureMarine bestiaire[MAX_CREATURES], int nb, int profondeur) {
@@ -160,15 +178,39 @@ IssueCombat lancer_combat(Plongeur* j, CreatureMarine bestiaire[MAX_CREATURES], 
 
             if (choix == 1) {
                 int ids[MAX_CREATURES], nids = 0;
-                for (int i = 0; i < nb; ++i) if (bestiaire[i].est_vivant) ids[nids++] = bestiaire[i].id;
-                if (nids == 0) break;
-                printf("Cible ? "); for (int i = 0; i < nids; ++i) printf("%d%s", ids[i], (i+1==nids)?"":" ");
-                printf("\n");
-                int cible_id = lire_entier_borne("> ", 1, MAX_CREATURES);
+                for (int i = 0; i < nb; ++i)
+                    if (bestiaire[i].est_vivant) ids[nids++] = bestiaire[i].id;
+
+                if (nids == 0) {
+                    puts("Il n'y a plus de cible vivante.");
+                    break;
+                }
+
+                printf("Cible ? ");
+                for (int i = 0; i < nids; ++i)
+                    printf("%d%s", ids[i], (i+1==nids) ? "" : " ");
+                printf("  (0 = Retour)\n");
+
+                int cible_id = lire_entier_borne("> ", 0, MAX_CREATURES);
+                if (cible_id == 0) {
+                    // retour au menu de combat sans consommer d'action, mais on rafraichit l'etat
+                    afficher_etat(j, bestiaire, nb, profondeur);
+                    continue;
+                }
 
                 CreatureMarine* cible = NULL;
-                for (int i = 0; i < nb; ++i) if (bestiaire[i].id == cible_id && bestiaire[i].est_vivant){ cible=&bestiaire[i]; break; }
-                if (!cible){ puts("Cible invalide."); continue; }
+                for (int i = 0; i < nb; ++i)
+                    if (bestiaire[i].id == cible_id && bestiaire[i].est_vivant) {
+                        cible = &bestiaire[i];
+                        break;
+                    }
+
+                if (!cible){
+                    puts("Cible invalide.");
+                    afficher_etat(j, bestiaire, nb, profondeur);
+                    continue;
+                }
+
 
                 int base = joueur_degats_random(j);
                 if (cible->type == TYPE_POISSON_EPEE) base += 2;
@@ -181,17 +223,22 @@ IssueCombat lancer_combat(Plongeur* j, CreatureMarine bestiaire[MAX_CREATURES], 
                 j->fatigue = clampi(j->fatigue + 1, 0, 5);
                 actions--;
 
+                // reafficher l'etat apres l'action
+                afficher_etat(j, bestiaire, nb, profondeur);
+
             } else if (choix == 2) {
-                (void)inv_use_menu_combat(j);
+                (void)inv_use_menu_combat(j);   // 1 si un objet a ete consomme, 0 si retour
+                // reaffiche l'etat du joueur et des creatures
+                afficher_etat(j, bestiaire, nb, profondeur);
             } else if (choix == 3) {
-                if (use_skill(j, profondeur, &effets, bestiaire, nb)) {
-                    // une competence consomme 1 action si elle a un effet (même Apnée)
+                int used_skill = use_skill(j, profondeur, &effets, bestiaire, nb);
+                if (used_skill) {
                     actions--;
                 }
+                afficher_etat(j, bestiaire, nb, profondeur);
             } else {
                 fin_tour = 1;
             }
-
             if (j->o2 == 0) {
                 puts("[CRITIQUE] Oxygene epuise ! Vous suffoquez (-5 PV).");
                 j->pv -= 5;

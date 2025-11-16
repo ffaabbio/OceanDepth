@@ -28,27 +28,42 @@ int main(void) {
         int ch = lire_entier_borne("> ", 1, 7);
 
         if (ch == 1) {
-            if (en_grotte) { puts("Vous etes dans une grotte. Sortez avant de vous deplacer."); continue; }
-            world_print(&world, &joueur);
-            puts("Deplacements : Z=Haut, S=Bas, Q=Gauche, D=Droite, 0=Retour au menu.");
-            for (;;) {
-                char buf[16]={0};
-                if (!fgets(buf, sizeof buf, stdin)) { clearerr(stdin); break; }
-                if (buf[0]=='0' || buf[0]=='\n') break;
-                int dx=0, dy=0;
-                if (buf[0]=='z' || buf[0]=='Z') dy=-1;
-                else if (buf[0]=='s' || buf[0]=='S') dy=+1;
-                else if (buf[0]=='q' || buf[0]=='Q') dx=-1;
-                else if (buf[0]=='d' || buf[0]=='D') dx=+1;
-                else { puts("Touche invalide. Z/S/Q/D ou 0 pour quitter."); continue; }
-                if (world_move(&world, &joueur, dx, dy, &profondeur)){
-                    // ok; afficher mini etat
-                    printf("Etat: PV=%d/%d  O2=%d/%d  Fatigue=%d  Perles=%d\n",
-                           joueur.pv, joueur.pv_max, joueur.o2, joueur.o2_max, joueur.fatigue, joueur.perles);
-                }
-                if (joueur.pv <= 0) { puts("Vous avez succombe... Fin de partie."); return 0; }
+            if (en_grotte) {
+                puts("Vous etes dans une grotte. Sortez avant de vous deplacer.");
+                continue;
             }
 
+            world_print(&world, &joueur);
+            puts("Deplacements : Z=Haut, S=Bas, Q=Gauche, D=Droite, 0=Retour au menu.");
+
+            for (;;) {
+                char buf[16] = {0};
+                if (!fgets(buf, sizeof buf, stdin)) { clearerr(stdin); break; }
+                if (buf[0] == '0' || buf[0] == '\n') break;
+
+                int dx = 0, dy = 0;
+                if (buf[0]=='z' || buf[0]=='Z') dy = -1;
+                else if (buf[0]=='s' || buf[0]=='S') dy = +1;
+                else if (buf[0]=='q' || buf[0]=='Q') dx = -1;
+                else if (buf[0]=='d' || buf[0]=='D') dx = +1;
+                else {
+                    puts("Touche invalide. Z/S/Q/D ou 0 pour quitter.");
+                    continue;
+                }
+
+                if (world_move(&world, &joueur, dx, dy, &profondeur)) {
+                    world_print(&world, &joueur);
+                    printf("Etat: PV=%d/%d  O2=%d/%d  Fatigue=%d  Perles=%d\n",
+                           joueur.pv, joueur.pv_max, joueur.o2, joueur.o2_max,
+                           joueur.fatigue, joueur.perles);
+                    puts("Deplacements : Z=Haut, S=Bas, Q=Gauche, D=Droite, 0=Retour au menu.");
+                }
+
+                if (joueur.pv <= 0) {
+                    puts("Vous avez succombe... Fin de partie.");
+                    return 0;
+                }
+            }
         } else if (ch == 2) {
             const Zone* z = world_current_zone(&world);
             if (en_grotte || z->type == Z_GROTTE) {

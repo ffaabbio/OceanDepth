@@ -118,17 +118,72 @@ static int inv_use_from_index(Plongeur* j, int idx){
 
 // Menu rapide en combat (montre seulement les consommables)
 int inv_use_menu_combat(Plongeur* j){
-    int map[INV_MAX]; int n=0;
-    puts("Consommables disponibles :");
-    for(int i=0;i<INV_MAX;i++){
-        if (j->inv.slots[i].kind==ITEM_CONS && j->inv.slots[i].qty>0){
-            printf("  %d) %s x%d\n", n+1, nom_consommable(j->inv.slots[i].subtype), j->inv.slots[i].qty);
-            map[n]=i; n++;
+    int indices[INV_MAX];
+    int n = 0;
+
+    // Construire la liste des consommables disponibles
+    for (int i = 0; i < INV_MAX; ++i) {
+        Item* it = &j->inv.slots[i];
+        if (it->kind == ITEM_CONS && it->qty > 0) {
+            indices[n++] = i;
         }
     }
-    if (n==0){ puts("  (aucun)"); return 0; }
-    int choix = lire_entier_borne("> ", 1, n);
-    return inv_use_from_index(j, map[choix-1]);
+
+    if (n == 0) {
+        puts("Vous n'avez aucun consommable utilisable en combat.");
+        return 0;
+    }
+
+    for (;;) {
+        puts("\n--- Inventaire (combat) ---");
+        for (int k = 0; k < n; ++k) {
+            Item* it = &j->inv.slots[indices[k]];
+            printf("%d) %s x%d\n", k+1,
+                   nom_consommable(it->subtype),
+                   it->qty);
+        }
+        puts("0) Retour");
+
+        int choix = lire_entier_borne("> ", 0, n);
+        if (choix == 0) return 0;
+
+        int slot_index = indices[choix-1];
+        Item* it = &j->inv.slots[slot_index];
+
+        if (it->kind != ITEM_CONS || it->qty <= 0) {
+            puts("Objet invalide.");
+            continue;
+        }
+
+        switch (it->subtype) {
+            case CONS_O2:
+                j->o2 = clampi(j->o2 + 40, 0, j->o2_max);
+                puts("Vous utilisez une capsule d'O2 (+40 O2).");
+                break;
+            case CONS_SOIN:
+                j->pv = clampi(j->pv + 25, 0, j->pv_max);
+                puts("Vous utilisez une trousse de soin (+25 PV).");
+                break;
+            case CONS_STIM:
+                j->fatigue = clampi(j->fatigue - 2, 0, 5);
+                puts("Vous utilisez un stimulant (-2 fatigue).");
+                break;
+            case CONS_ANTIDOTE:
+                puts("Vous utilisez un antidote.");
+                break;
+            default:
+                puts("Cet objet ne peut pas etre utilise maintenant.");
+                return 0;
+        }
+
+        it->qty--;
+        if (it->qty <= 0) {
+            it->kind = 0;
+            it->subtype = 0;
+        }
+
+        return 1; // un objet a ete utilise
+    }
 }
 
 // Grand menu (hors combat)
